@@ -56,7 +56,7 @@ app.get("/push", function (req, res) {
   return res.json({ firebase: true });
 });
 
-app.get("/send", upload.single("fileInput"), (req, res) => {
+app.get("/send1", (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
@@ -67,27 +67,59 @@ app.get("/send", upload.single("fileInput"), (req, res) => {
 
   let speechData = {
     method: "POST",
-    body: fs.createReadStream("./sttTest1.mp3"),
+    body: fs.createReadStream("./music/sttTest1.mp3"),
     headers: {
       "Content-Type": "application/octet-stream",
       "X-NCP-APIGW-API-KEY-ID": "bi3sbu34oo",
       "X-NCP-APIGW-API-KEY": "3ilzXddSzUs555vWaxIBtg8RCP5n3E9RRvWkYJQ0",
     },
   };
-
   function stt(response) {
     text = response;
-
     return text;
   }
+
   fetch(
     `https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=Eng`,
     speechData
   )
     .then((response) => response.json())
     .then((response) => {
+      console.log(response);
       return res.send(stt(response));
     });
 
-  return res.json({ firebase: true });
+  app.get("/send2", (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+
+    const date = new Date();
+    let time = date.toLocaleTimeString("ko-kr");
+    let name = "유승훈";
+    let text = "a";
+
+    let speechData = {
+      method: "POST",
+      body: fs.createReadStream("./music/sttTest.mp3"),
+      headers: {
+        "Content-Type": "application/octet-stream",
+        "X-NCP-APIGW-API-KEY-ID": "bi3sbu34oo",
+        "X-NCP-APIGW-API-KEY": "3ilzXddSzUs555vWaxIBtg8RCP5n3E9RRvWkYJQ0",
+      },
+    };
+    function stt(response) {
+      text = response;
+      return text;
+    }
+
+    fetch(
+      `https://naveropenapi.apigw.ntruss.com/recog/v1/stt?lang=Eng`,
+      speechData
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        return res.send(stt(response));
+      });
+  });
 });
